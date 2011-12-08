@@ -51,6 +51,8 @@ PythonMode. These options should be set in your vimrc.
 
 |'pymode_paths'|                    Additional python paths for pymode
 
+|'pymode_py3k'|                     Enable support for python 3
+
 |'pymode_doc'|                      Turns off the documentation script
 
 |'pymode_doc_key'|                  Key for show documentation

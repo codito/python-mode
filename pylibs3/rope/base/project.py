@@ -368,6 +368,7 @@ def _realpath(path):
 
     """
     path = path or ''
+
     # there is a bug in cygwin for os.path.abspath() for abs paths
     if sys.platform == 'cygwin':
         if path[1:3] == ':\\':
