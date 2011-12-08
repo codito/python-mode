@@ -8,9 +8,10 @@ CONTENTS                                                  *Python-mode-contents*
         2.1.Customisation details.............|PythonModeOptionsDetails|
     3.Default Keys............................|PythonModeKeys|
     4.Commands................................|PythonModeCommands|
-    5.FAQ.....................................|PythonModeFAQ|
-    6.Credits.................................|PythonModeCredits|
-    7.License.................................|PythonModeLicense|
+    5.Python 3................................|PythonModePython3|
+    6.FAQ.....................................|PythonModeFAQ|
+    7.Credits.................................|PythonModeCredits|
+    8.License.................................|PythonModeLicense|
 
 ==============================================================================
 1. Intro ~
@@ -34,6 +35,8 @@ to install the pylint or rope library on your system.
 
 The script provides the following options that can customise the behaviour the
 PythonMode. These options should be set in your vimrc.
+
+|'pymode_py3k'|                     Enable support for python 3
 
 |'pymode_doc'|                      Turns off the documentation script
 
@@ -98,6 +101,13 @@ PythonMode. These options should be set in your vimrc.
 
 To enable any of the below options you should put the given line in your
 '$HOME/.vimrc'. See |vimrc-intro|.
+
+------------------------------------------------------------------------------
+                                                                  *'pymode_py3k'*
+Values: 0 or 1.
+Default: 0.
+
+If this option is set to 1 then python 3 support is enabled.
 
 ------------------------------------------------------------------------------
                                                                   *'pymode_doc'*
@@ -345,7 +355,19 @@ C-Space           Rope code assist
 
 
 ==============================================================================
-5. FAQ ~
+5. Python 3
+                                                            *PythonModePython3*
+
+Python-mode Python 3 support requires your vim to be compiled with python 3.
+Please see |Python3| for more details.
+
+Please refer |pymode_py3k| to enable python 3. Kindly note that python 3
+feature support very preliminary at this moment, and only supports rope
+plugin.
+
+
+==============================================================================
+6. FAQ ~
                                                                  *PythonModeFAQ*
 
 Rope completion is very slow
@@ -376,7 +398,7 @@ You may set |exrc| and |secure| in your |vimrc| for auto set custom settings fro
 
 
 ==============================================================================
-6. Credits ~
+7. Credits ~
                                                              *PythonModeCredits* 
     Kirill Klenov
         http://klen.github.com/
@@ -400,7 +422,7 @@ You may set |exrc| and |secure| in your |vimrc| for auto set custom settings fro
 
 
 ==============================================================================
-7. License ~
+8. License ~
                                                              *PythonModeLicense*
 
 The Python-mode is released under the GNU lesser general public license.

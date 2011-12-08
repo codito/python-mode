@@ -97,6 +97,19 @@ To change this settings, edit your ``~/.vimrc``: ::
     let g:pymode_run_key = 'R'
 
 
+Python 3 support
+----------------
+.. note:: Requires vim to be compiled with ``python3`` support. You can verify it with
+``:echo has('python3')``
+
+Currently only rope_ is supported under python 3.
+
+Default values: ::
+
+    " Enables python3 support
+    let g:pymode_py3k = 0
+
+
 Show documentation
 ------------------
 

@@ -16,18 +16,35 @@ if !has('python')
     let g:pymode_rope = 0
     let g:pymode_path = 0
     let g:pymode_virtualenv = 0
+    let g:pymode_py3k = 0
+endif
+
+if !pymode#Default('g:pymode_py3k', 0) || g:pymode_py3k
+    if !has('python3')
+        let g:pymode_py3k = 0
+    else
+        " TODO: enable these plugins under python3
+        let g:pymode_lint = 0
+    endif
 endif
 
 " DESC: Fix python path
 if !pymode#Default('g:pymode_path', 1) || g:pymode_path
+    if g:pymode_py3k
+python3 << EOF
+import sys, vim
+from os import path as op
+sys.path = [op.join(vim.eval("expand('<sfile>:p:h:h')"), 'pylibs3'),
+           vim.eval("getcwd()")] + sys.path
+EOF
+    else
 python << EOF
 import sys, vim
 from os import path as op
-
-sys.path = [
-    op.join(op.dirname(op.dirname(vim.eval("expand('<sfile>:p')"))),
-    'pylibs'), vim.eval("getcwd()") ] + sys.path
+sys.path = [op.join(vim.eval("expand('<sfile>:p:h:h')"), 'pylibs'),
+           vim.eval("getcwd()")] + sys.path
 EOF
+    endif
 endif
 
 if !pymode#Default("g:pymode_lint", 1) || g:pymode_lint
@@ -232,7 +249,11 @@ if !pymode#Default("g:pymode_rope", 1) || g:pymode_rope
     call pymode#Default("g:pymode_rope_always_show_complete_menu", 0)
 
     " DESC: Init Rope
-    py import ropevim
+    if g:pymode_py3k
+        py3 import ropevim
+    else
+        py import ropevim
+    endif
 
     fun! RopeCodeAssistInsertMode() "{{{
         call RopeCodeAssist()
