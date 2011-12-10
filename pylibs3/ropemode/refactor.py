@@ -13,7 +13,7 @@ import rope.refactor.restructure
 import rope.refactor.usefunction
 from rope.base import taskhandle
 
-from ropemode import dialog, filter
+from ropemode import dialog, filter as file_filter
 
 
 class Refactoring(object):
@@ -111,8 +111,11 @@ class Refactoring(object):
 
 class Rename(Refactoring):
     key = 'r'
-
     saveall = True
+
+    def __init__(self, *args):
+        self.renamer = None
+        super(Rename, self).__init__(*args)
 
     def _create_refactoring(self):
         self.renamer = rope.refactor.rename.Rename(
@@ -183,6 +186,10 @@ class Restructure(Refactoring):
 class UseFunction(Refactoring):
     key = 'u'
 
+    def __init__(self, *args):
+        super(UseFunction, self).__init__(*args)
+        self.user = None
+
     def _create_refactoring(self):
         self.user = rope.refactor.usefunction.UseFunction(
             self.project, self.resource, self.offset)
@@ -196,6 +203,9 @@ class UseFunction(Refactoring):
 
 class Move(Refactoring):
     key = 'v'
+    def __init__(self, *args):
+        super(Move, self).__init__(*args)
+        self.mover = None
 
     def _create_refactoring(self):
         self.mover = rope.refactor.move.create_move(self.project,
@@ -248,6 +258,9 @@ class MoveCurrentModule(Move):
 class ModuleToPackage(Refactoring):
     key = '1 p'
     saveall = False
+    def __init__(self, *args):
+        super(ModuleToPackage, self).__init__(*args)
+        self.packager = None
 
     def _create_refactoring(self):
         self.packager = rope.refactor.ModuleToPackage(
@@ -259,6 +272,9 @@ class ModuleToPackage(Refactoring):
 
 class Inline(Refactoring):
     key = 'i'
+    def __init__(self, *args):
+        super(Inline, self).__init__(*args)
+        self.inliner = None
 
     def _create_refactoring(self):
         self.inliner = rope.refactor.inline.create_inline(
@@ -284,7 +300,11 @@ class _Extract(Refactoring):
     optionals = {'similar': dialog.Boolean('Extract similar pieces: ', True),
                  'global_': dialog.Boolean('Make global: ')}
     kind = None
-    constructor = None
+    constructor = rope.refactor.extract.ExtractVariable
+
+    def __init__(self, *args):
+        super(_Extract, self).__init__(*args)
+        self.extractor = None
 
     def _create_refactoring(self):
         start, end = self.region
@@ -317,6 +337,10 @@ class OrganizeImports(Refactoring):
     key = 'o'
     saveall = False
 
+    def __init__(self, *args):
+        self.organizer = None
+        super(OrganizeImports, self).__init__(*args)
+
     def _create_refactoring(self):
         self.organizer = rope.refactor.ImportOrganizer(self.project)
 
@@ -341,6 +365,9 @@ class MethodObject(Refactoring):
 class IntroduceFactory(Refactoring):
     saveall = True
     key = 'f'
+    def __init__(self, *args):
+        super(IntroduceFactory, self).__init__(*args)
+        self.factory = None
 
     def _create_refactoring(self):
         self.factory = rope.refactor.introduce_factory.IntroduceFactory(
@@ -361,6 +388,9 @@ class IntroduceFactory(Refactoring):
 class ChangeSignature(Refactoring):
     saveall = True
     key = 's'
+    def __init__(self, *args):
+        super(ChangeSignature, self).__init__(*args)
+        self.changer = None
 
     def _create_refactoring(self):
         self.changer = rope.refactor.change_signature.ChangeSignature(
@@ -400,7 +430,7 @@ class ChangeSignature(Refactoring):
 
     def _get_confs(self):
         args = []
-        for arg, default in self._get_args():
+        for arg, _ in self._get_args():
             args.append(arg)
         signature = '(' + ', '.join(args) + ')'
         return {'signature': dialog.Data('Change the signature: ',
@@ -415,6 +445,9 @@ class ChangeSignature(Refactoring):
 
 
 class _GenerateElement(Refactoring):
+    def __init__(self, *args):
+        super(_GenerateElement, self).__init__(*args)
+        self.generator = None
 
     def _create_refactoring(self):
         kind = self.name.split('_')[-1]
@@ -462,11 +495,12 @@ def refactoring_name(refactoring):
 def _resources(project, text):
     if text is None or text.strip() == '':
         return None
-    return filter.resources(project, text)
+    return file_filter.resources(project, text)
 
 
 def runtask(env, command, name, interrupts=True):
     return RunTask(env, command, name, interrupts)()
+
 
 class RunTask(object):
 
@@ -479,12 +513,14 @@ class RunTask(object):
     def __call__(self):
         handle = taskhandle.TaskHandle(name=self.name)
         progress = self.env.create_progress(self.name)
+
         def update_progress():
             jobset = handle.current_jobset()
             if jobset:
                 percent = jobset.get_percent_done()
                 if percent is not None:
                     progress.update(percent)
+
         handle.add_observer(update_progress)
         result = self.task(handle)
         progress.done()
