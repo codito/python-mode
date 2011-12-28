@@ -45,4 +45,5 @@ EOF
 
     call pymode#WideMessage("Activate virtualenv: ".$VIRTUAL_ENV)
 
+    endif
 endfunction "}}}
