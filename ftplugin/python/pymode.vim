@@ -47,8 +47,13 @@ endif
 
 " Fix path for project
 if g:pymode
-    py curpath = vim.eval('getcwd()')
-    py curpath in sys.path or sys.path.append(curpath)
+    if g:pymode_py3k
+        py3 curpath = vim.eval('getcwd()')
+        py3 curpath in sys.path or sys.path.append(curpath)
+    else
+        py curpath = vim.eval('getcwd()')
+        py curpath in sys.path or sys.path.append(curpath)
+    endif
 endif
 
 " Add virtualenv paths
