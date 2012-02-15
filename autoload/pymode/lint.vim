@@ -10,6 +10,7 @@ fun! pymode#lint#Check() "{{{
             echohl Error | echo "File modified and I can't save it. Cancel code checking." | echohl None
             return 0
         endtry
+    endif	
     endif
 
     let g:pymode_lint_buffer = bufnr('%')
