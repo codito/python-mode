@@ -8,23 +8,13 @@ if pymode#Default('g:pymode', 1) || !g:pymode
     finish
 endif
 
-" DESC: Check python support
-if !has('python')
-    echoerr expand("<sfile>:t") . " required vim compiled with +python."
-    echoerr "Pymode pylint and rope plugins will be disabled."
-    let g:pymode_lint = 0
-    let g:pymode_rope = 0
-    let g:pymode_path = 0
-    let g:pymode_virtualenv = 0
-    let g:pymode_py3k = 0
-endif
-
 if !pymode#Default('g:pymode_py3k', 0) || g:pymode_py3k
     if !has('python3')
         let g:pymode_py3k = 0
     else
         " TODO: enable these plugins under python3
-        let g:pymode_lint = 0
+        let g:pymode_lint = 1
+        let g:pymode_syntax = 1
     endif
 endif
 
@@ -86,55 +76,26 @@ if !pymode#Default("g:pymode_lint", 1) || g:pymode_lint
         let g:pymode_lint_config = expand("<sfile>:p:h:h") . "/pylint.ini"
     endif
 
-python << EOF
+python3 << EOF
 import os
-import StringIO
+import io
 import _ast
 import re
 
-from logilab.astng.builder import MANAGER
-from pylint import lint, checkers
 from pyflakes import checker
 
 
-# Pylint setup
-linter = lint.PyLinter()
-pylint_re = re.compile('^[^:]+:(\d+): \[([EWRCI]+)[^\]]*\] (.*)$')
-
-checkers.initialize(linter)
-linter.set_option("output-format", "parseable")
-linter.set_option("reports", 0)
-linter.load_file_configuration(vim.eval("g:pymode_lint_config"))
-
 # Pyflakes setup
-
-# Pylint check
-def pylint():
-    filename = vim.current.buffer.name
-    MANAGER.astng_cache.clear()
-    linter.reporter.out = StringIO.StringIO()
-    linter.check(filename)
-    qf = []
-    for w in linter.reporter.out.getvalue().split('\n'):
-        test = pylint_re.match(w)
-        test and qf.append(dict(
-                filename = filename,
-                bufnr = vim.current.buffer.number,
-                lnum = test.group(1),
-                type = test.group(2),
-                text = test.group(3).replace("'", "\""),
-            ))
-    vim.command('let b:qf_list = %s' % repr(qf))
 
 # Pyflakes check
 def pyflakes():
     filename = vim.current.buffer.name
-    codeString = file(filename, 'U').read() + '\n'
+    codeString = open(filename, 'U').read() + '\n'
     qf = []
     try:
         tree = compile(codeString, filename, "exec", _ast.PyCF_ONLY_AST)
 
-    except SyntaxError, value:
+    except SyntaxError as value:
         msg = value.args[0]
         if codeString is None:
             vim.command('echoerr "%s: problem decoding source"' % filename)
@@ -150,7 +111,7 @@ def pyflakes():
 
     else:
         w = checker.Checker(tree, filename)
-        w.messages.sort(lambda a, b: cmp(a.lineno, b.lineno))
+        w.messages.sort(key=lambda a: a.lineno)
         for w in w.messages:
             qf.append(dict(
                 filename = filename,

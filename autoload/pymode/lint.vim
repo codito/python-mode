@@ -8,7 +8,7 @@ function! pymode#lint#Check()
             return 0
         endtry
     endif	
-    exe "py ".g:pymode_lint_checker."()"
+    exe "py3 ".g:pymode_lint_checker."()"
     call setqflist(b:qf_list, 'r')
     if g:pymode_lint_cwindow
         call pymode#QuickfixOpen(0, 0, g:pymode_lint_maxheight, g:pymode_lint_minheight, g:pymode_lint_jump)
