@@ -1,5 +1,13 @@
 *pymode.txt*  *python-mode.txt*  Python-mode for vim!
 
+    ____  _  _  ____  _   _  _____  _  _     __  __  _____  ____  ____      ~
+   (  _ \( \/ )(_  _)( )_( )(  _  )( \( )___(  \/  )(  _  )(  _ \( ___)     ~
+    )___/ \  /   )(   ) _ (  )(_)(  )  ((___))    (  )(_)(  )(_) ))__)      ~
+   (__)   (__)  (__) (_) (_)(_____)(_)\_)   (_/\/\_)(_____)(____/(____)     ~
+
+
+                          Version: 0.6.0
+
 ==============================================================================
 CONTENTS                                                  *Python-mode-contents*
 
@@ -42,15 +50,19 @@ PythonMode. These options should be set in your vimrc.
 
 |'pymode_doc_key'|                  Key for show documentation
 
-|'pydoc'|                           Command for run pydoc
-
 |'pymode_run'|                      Turns off the run code script
 
 |'pymode_run_key'|                  Key for run python code
 
 |'pymode_lint'|                     Turns off pylint script
 
-|'pymode_lint_checker'|             Switch code checkers (pylint, pyflakes)
+|'pymode_lint_checker'|             Switch code checkers (pylint, pyflakes, pep8, mccabe)
+
+|'pymode_lint_ignore'|              Skip errors and warnings
+
+|'pymode_lint_select'|              Select errors and warnings
+
+|'pymode_lint_onfly'|               Run linter on the fly
 
 |'pymode_lint_config'|              Filepath to pylinc configuration
 
@@ -58,15 +70,21 @@ PythonMode. These options should be set in your vimrc.
 
 |'pymode_lint_cwindow'|             Show cwindow
 
+|'pymode_lint_message'|             Show current line errors in bottom
+
 |'pymode_lint_signs'|               Place signs
 
 |'pymode_lint_jump'|                Auto jump on first error
+
+|'pymode_lint_hold'|                Hold cursor in current window
 
 |'pymode_lint_minheight'|           Minimal height of pylint error window
 
 |'pymode_lint_maxheight'|           Maximal height of pylint error window
 
 |'pymode_rope'|                     Turns off rope script
+
+|'pymode_folding'|                  Turns on/off python folding
 
 |'pymode_breakpoint'|               Turns off breakpoint script
 
@@ -82,9 +100,6 @@ PythonMode. These options should be set in your vimrc.
 
 |'pymode_options_indent'|           Set default pymode options for
                                   python indentation
-
-|'pymode_options_fold'|             Set default pymode options for
-                                  python folding
 
 |'pymode_options_other'|            Set default pymode options for
                                   python codding
@@ -123,12 +138,6 @@ Default: 'K'.
 Set key for show python documentation.
 
 ------------------------------------------------------------------------------
-                                                                       *'pydoc'*
-Default: 'pydoc'.
-
-Set command for documentation search.
-
-------------------------------------------------------------------------------
                                                                   *'pymode_run'*
 Values: 0 or 1.
 Default: 1.
@@ -150,10 +159,39 @@ If this option is set to 0 then pylint script is disabled.
 
 ------------------------------------------------------------------------------
                                                          *'pymode_lint_checker'*
-Values: "pylint" or "pyflakes"
-Default: "pylint".
+Values: "pylint", "pyflakes", "pep8", "mccabe"
+        You can set many checkers. E.g. "pyflakes,pep8,mccabe" ~
 
-This option set code checker.
+Default: "pyflakes,pep8,mccabe".
+
+This option set code checkers.
+
+------------------------------------------------------------------------------
+                                                          *'pymode_lint_ignore'*
+Values: IDs of errors, separated by commas or empty string
+        E.g. "E501,W002", "E2,W" (Skip all Warnings and Errors startswith E2) and etc ~
+
+Default: "E501".
+
+Skip errors and warnings.
+See also: |'pymode_lint_select'|, |'pymode_lint_config'|
+
+------------------------------------------------------------------------------
+                                                         *'pymode_lint_select'*
+Values: IDs of errors, separated by commas or empty string
+        E.g. "W002,C" Force W002 and all C-ids ~
+
+Default: "".
+
+Select errors and warnings.
+See also: |'pymode_lint_ignore'|, |'pymode_lint_config'|
+
+------------------------------------------------------------------------------
+                                                           *'pymode_lint_onfly'*
+Values: 0 or 1
+Default: 0
+
+This option enabled "on the fly" code checking
 
 ------------------------------------------------------------------------------
                                                           *'pymode_lint_config'*
@@ -162,6 +200,8 @@ Default: "$HOME/.pylintrc"
 
 If this option is set path to pylint configuration. If configuration not found
 uses file 'pylintrc' from python-mode sources.
+
+See also: |'pymode_lint_ignore'|, |'pymode_lint_select'|
 
 ------------------------------------------------------------------------------
                                                            *'pymode_lint_write'*
@@ -178,6 +218,13 @@ Default: 1.
 If this option is set to 0 then pylint not show cwindow.
 
 ------------------------------------------------------------------------------
+                                                         *'pymode_lint_message'*
+Values: 0 or 1.
+Default: 1.
+
+If this option is set to 0 then pylint not show errors in bottom
+
+------------------------------------------------------------------------------
                                                            *'pymode_lint_signs'*
 Values: 0 or 1.
 Default: 1.
@@ -190,6 +237,14 @@ Values: 0 or 1.
 Default: 0.
 
 If this option is set to 0 then pylint not jump on first error.
+
+------------------------------------------------------------------------------
+                                                            *'pymode_lint_hold'*
+Values: 0 or 1.
+Default: 0.
+
+If this option is set to 0 then pylint switch on quickfix window when it open
+Not working when |'pymode_lint_jump'| enabled.
 
 ------------------------------------------------------------------------------
                                                        *'pymode_lint_minheight'*
@@ -273,16 +328,12 @@ If this option is set to 1, pymode enable next options for python buffers: >
     setlocal autoindent
 <
 ------------------------------------------------------------------------------
-                                                         *'pymode_options_fold'*
+                                                              *'pymode_folding'*
 Values: 0 or 1.
 Default: 1.
 
-If this option is set to 1, pymode enable next options for python buffers: >
+If this option is set to 1, pymode enable python-folding.
 
-    setlocal foldlevelstart=99
-    setlocal foldlevel=99
-    setlocal foldmethod=indent
-<
 ------------------------------------------------------------------------------
                                                         *'pymode_options_other'*
 Values: 0 or 1.
@@ -309,12 +360,12 @@ Key               Command
 ================  ============================
 [[                Jump on previous class or function (normal, visual, operator modes)
 ]]                Jump on next class or function  (normal, visual, operator modes)
-[m                Jump on previous class or method (normal, visual, operator modes)
-]m                Jump on next class or method (normal, visual, operator modes)
-ac                Select a class. Ex: vac, dac, yac, cac (normal, operator modes)
-ic                Select inner class. Ex: vic, dic, yic, cic (normal, operator modes)
-am                Select a function or method. Ex: vam, dam, yam, cam (normal, operator modes)
-im                Select inner function or method. Ex: vim, dim, yim, cim (normal, operator modes)
+[M                Jump on previous class or method (normal, visual, operator modes)
+]M                Jump on next class or method (normal, visual, operator modes)
+aC                Select a class. Ex: vaC, daC, yaC, caC (normal, operator modes)
+iC                Select inner class. Ex: viC, diC, yiC, ciC (normal, operator modes)
+aM                Select a function or method. Ex: vaM, daM, yaM, caM (normal, operator modes)
+iM                Select inner function or method. Ex: viM, diM, yiM, ciM (normal, operator modes)
 ================  ============================
 
 
@@ -331,6 +382,18 @@ K                 Show python docs for current word under cursor
 C-Space           Rope code assist
 <leader>r         Run current buffer
 <leader>b         Set breakpoints
+[[                Jump on previous class or function (normal, visual, operator modes)
+]]                Jump on next class or function  (normal, visual, operator modes)
+[M                Jump on previous class or method (normal, visual, operator modes)
+]M                Jump on next class or method (normal, visual, operator modes)
+aC C              Operation with a class.
+                  Ex: vaC, daC, dC, yaC, yC, caC, cC (normal, operator modes)
+iC                Operation with inner class.
+                  Ex: viC, diC, yiC, ciC (normal, operator modes)
+aM M              Operation with function or method.
+                  Ex: vaM, daM, dM, yaM, yM, caM, cM (normal, operator modes)
+iM                Operation with inner function or method.
+                  Ex: viM, diM, yiM, ciM (normal, operator modes)
 ================  ============================
 
 	Note:
@@ -427,6 +490,11 @@ You may set |exrc| and |secure| in your |vimrc| for auto set custom settings fro
 
 The Python-mode is released under the GNU lesser general public license.
 See: http://www.gnu.org/copyleft/lesser.html
+
+If you like this plugin, you can send me postcard :) 
+My address is here: "Russia, 143401, Krasnogorsk, Shkolnaya 1-19" to "Kirill Klenov".
+Thanks for support!
+
 
 ------------------------------------------------------------------------------
 

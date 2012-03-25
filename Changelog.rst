@@ -1,6 +1,61 @@
 Changelog
 =========
 
+## 2012-03-13 0.6.0
+-------------------
+* Add 'pymode_lint_hold' option 
+* Improve pymode loading speed
+* Add pep8, mccabe lint checkers
+* Now g:pymode_lint_checker can have many values
+  Ex. "pep8,pyflakes,mccabe"
+* Add 'pymode_lint_ignore' and 'pymode_lint_select' options 
+* Fix rope keys
+* Fix python motion in visual mode
+* Add folding 'pymode_folding'
+* Warning: 'pymode_lint_checker' now set to 'pyflakes,pep8,mccabe' by default
+
+## 2012-02-12 0.5.8
+-------------------
+* Fix pylint for Windows users
+* Python documentation search running from Vim (delete g:pydoc option)
+* Python code execution running from Vim (delete g:python option)
+
+## 2012-02-11 0.5.7
+-------------------
+* Fix 'g:pymode_lint_message' mode error
+* Fix breakpoints
+* Fix python paths and virtualenv detection
+
+## 2012-02-06 0.5.6
+-------------------
+* Fix 'g:pymode_syntax' option
+* Show error message in bottom part of screen
+  see 'g:pymode_lint_message'
+* Fix pylint for windows users
+* Fix breakpoint command (Use pdb when idpb not installed)
+
+## 2012-01-17 0.5.5
+-------------------
+* Add a sign for info messages from pylint.
+  (c) Fredrik Henrysson
+* Change motion keys: vic - viC, dam - daM and etc
+* Add 'g:pymode_lint_onfly' option
+
+## 2012-01-09 0.5.3
+-------------------
+* Prevent the configuration from breaking python-mode
+  (c) Dirk Wallenstein
+
+## 2012-01-08 0.5.2
+-------------------
+* Fix ropeomnicompletion
+* Add preview documentation
+
+## 2012-01-06 0.5.1
+-------------------
+* Happy new year!
+* Objects and motion  fixes
+
 ## 2011-11-30 0.5.0
 -------------------
 * Add python objects and motions (beta)
@@ -58,7 +113,6 @@ Changelog
 -------------------
 * Add 'g:pymode_rope_always_show_complete_menu' option
 * Some pylint fixes
-
 
 ## 2011-10-25 0.3.0
 -------------------
