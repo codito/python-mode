@@ -30,25 +30,6 @@ if !has('python') && !has('python3')
     let g:pymode_virtualenv = 0
 endif
 
-" DESC: Fix python path
-if !pymode#Default('g:pymode_path', 1) || g:pymode_path
-    if g:pymode_py3k
-python3 << EOF
-import sys, vim
-from os import path as op
-sys.path = [op.join(vim.eval("expand('<sfile>:p:h:h')"), 'pylibs3'),
-           vim.eval("getcwd()")] + sys.path
-EOF
-    else
-python << EOF
-import sys, vim
-from os import path as op
-sys.path = [op.join(vim.eval("expand('<sfile>:p:h:h')"), 'pylibs'),
-           vim.eval("getcwd()")] + sys.path
-EOF
-    endif
-endif
-
 
 " Virtualenv {{{
 
@@ -62,6 +43,20 @@ if !pymode#Default("g:pymode_virtualenv", 1) || g:pymode_virtualenv
 endif
 
 " }}}
+
+
+" DESC: Fix python path
+if !pymode#Default('g:pymode_path', 1) || g:pymode_path
+python << EOF
+import sys, vim, os
+
+curpath = vim.eval("getcwd()")
+libpath = os.path.join(os.path.dirname(os.path.dirname(
+    vim.eval("expand('<sfile>:p')"))), 'pylibs')
+
+sys.path = [libpath, curpath] + sys.path
+EOF
+endif
 
 
 " Lint {{{
