@@ -21,8 +21,6 @@ fun! pymode#lint#Check() "{{{
         py check_file()
     endif
 
-    call pymode#WideMessage('Code checking is run.')
-
 endfunction " }}}
 
 
@@ -44,15 +42,6 @@ fun! pymode#lint#Parse()
     endif
 
 endfunction
-
-
-fun! pymode#lint#Stop() "{{{
-    " DESC: Stop async threading.
-    "
-    py stop_checkers()
-    call pymode#WideMessage('Code checking is aborted.')
-
-endfunction "}}}
 
 
 fun! pymode#lint#Toggle() "{{{
