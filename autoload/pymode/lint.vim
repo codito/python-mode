@@ -16,9 +16,9 @@ fun! pymode#lint#Check() "{{{
     let g:pymode_lint_buffer = bufnr('%')
 
     if g:pymode_py3k != 0
-        exe "py3 ".g:pymode_lint_checker."()"
+        py3 lint.check_file()
     else
-        py check_file()
+        py lint.check_file()
     endif
 
 endfunction " }}}
