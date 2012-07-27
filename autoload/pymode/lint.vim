@@ -2,8 +2,6 @@ fun! pymode#lint#Check()
 
     if !g:pymode_lint | return | endif
 
-    let b:errors = {}
-
     if &modifiable && &modified
         try
             write
@@ -13,36 +11,28 @@ fun! pymode#lint#Check()
         endtry
     endif
 
+
+    let g:pymode_lint_buffer = bufnr('%')
+
     if g:pymode_py3k != 0
         exe "py3 ".g:pymode_lint_checker."()"
-    "call setqflist(b:qf_list, 'r')
-    "if g:pymode_lint_cwindow
-        "call pymode#QuickfixOpen(0, 0, g:pymode_lint_maxheight, g:pymode_lint_minheight, g:pymode_lint_jump)
     else
         py check_file()
     endif
 
-    if g:qf_list != b:qf_list
+endfunction
 
-        call setqflist(b:qf_list, 'r')
 
-        let g:qf_list = b:qf_list
+fun! pymode#lint#Parse()
 
-        if g:pymode_lint_message
-            for v in b:qf_list
-                let b:errors[v['lnum']] = v['text']
-            endfor
-            call pymode#lint#show_errormessage()
-        endif
-
-        if g:pymode_lint_cwindow
-            call pymode#QuickfixOpen(0, g:pymode_lint_hold, g:pymode_lint_maxheight, g:pymode_lint_minheight, g:pymode_lint_jump)
-        endif
-
-    endif
+    call setqflist(g:qf_list, 'r')
 
     if g:pymode_lint_signs
         call pymode#PlaceSigns()
+    endif
+
+    if g:pymode_lint_cwindow
+        call pymode#QuickfixOpen(0, g:pymode_lint_hold, g:pymode_lint_maxheight, g:pymode_lint_minheight, g:pymode_lint_jump)
     endif
 
 endfunction
@@ -81,13 +71,17 @@ endfunction "}}}
 
 
 fun! pymode#lint#show_errormessage() "{{{
-    if !len(b:errors) | return | endif
-    let cursor = getpos(".")
-    if has_key(b:errors, l:cursor[1])
-        call pymode#WideMessage(b:errors[l:cursor[1]])
-        let b:show_message = 1
-    else
-        let b:show_message = 0
-        echo
+    if g:pymode_lint_buffer != bufnr('%')
+        return 0
     endif
+    let errors = getqflist()
+    if !len(errors) | return | endif
+    let [_, line, _, _] = getpos(".")
+    for e in errors
+        if e['lnum'] == line
+            call pymode#WideMessage(e['text'])
+        else
+            echo
+        endif
+    endfor
 endfunction " }}}
