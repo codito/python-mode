@@ -128,9 +128,9 @@ if !pymode#Default("g:pymode_lint", 1) || g:pymode_lint
     endif
 
     if g:pymode_py3k == 1
-        py3 from pymode import check_file
+        py3 from pymode import check_file, stop_checkers
     else
-        py from pymode import check_file
+        py from pymode import check_file, stop_checkers
     endif
 
 endif
