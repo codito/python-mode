@@ -128,11 +128,11 @@ if !pymode#Default("g:pymode_lint", 1) || g:pymode_lint
     endif
 
     if g:pymode_py3k == 1
-        py3 from pymode import lint, queue
+        py3 from pymode import lint, queue, auto
 
         au VimLeavePre * py3 queue.stop_queue()
     else
-        py3 from pymode import lint, queue
+        py from pymode import lint, queue, auto
 
         au VimLeavePre * py queue.stop_queue()
     endif

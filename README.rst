@@ -408,6 +408,8 @@ PyLintCheckerToggle  Toggle code checker (pylint, pyflakes)
 -------------------- -------------
 PyLint               Check current buffer
 -------------------- -------------
+PyLintAuto           Automatic fix PEP8 errors
+-------------------- -------------
 Pyrun                Run current buffer in python
 ==================== =============
 
@@ -478,6 +480,10 @@ Copyright (C) 2012 Kirill Klenov (klen_)
     **PEP8**
         Copyright (C) 2006 Johann C. Rocholl <johann@rocholl.net>
         http://github.com/jcrocholl/pep8
+
+    **autopep8**:
+        Copyright (c) 2012 hhatto <hhatto.jp@gmail.com>
+        https://github.com/hhatto/autopep8
 
     **Python syntax for vim**
         Copyright (c) 2010 Dmitry Vasiliev
