@@ -273,10 +273,7 @@ if !pymode#Default("g:pymode_rope", 1) || g:pymode_rope
 
     fun! RopeOpenExistingProject() "{{{
         if isdirectory('./.ropeproject')
-            call RopeOpenProject()
-            " Reload current buffer
-            "silent edit!
-            " Does not work, looses syntax!!! argg
+            :silent call RopeOpenProject()
             return ""
         endif
     endfunction "}}}
@@ -319,7 +316,7 @@ if !pymode#Default("g:pymode_rope", 1) || g:pymode_rope
 
     " Hooks
     if !pymode#Default("g:pymode_rope_auto_project_open", 1) || g:pymode_rope_auto_project_open
-        autocmd VimEnter * call RopeOpenExistingProject()
+        call RopeOpenExistingProject()
     endif
 
 endif
