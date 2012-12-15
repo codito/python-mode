@@ -2,6 +2,9 @@ let g:pymode_version = "0.6.0"
 
 com! PymodeVersion echomsg "Current python-mode version: " . g:pymode_version
 
+" Disable pymode breakpoint, was on for some reason
+let g:pymode_breakpoint = 0
+
 " OPTION: g:pymode -- bool. Run pymode.
 if pymode#Default('g:pymode', 1) || !g:pymode
     " DESC: Disable script loading
