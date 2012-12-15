@@ -154,6 +154,7 @@ if !pymode#Default("g:pymode_breakpoint", 1) || g:pymode_breakpoint
     if !pymode#Default("g:pymode_breakpoint_cmd", "import ipdb; ipdb.set_trace() ### XXX BREAKPOINT")  && has("python")
 python << EOF
 from imp import find_module
+import vim
 try:
     find_module('ipdb')
 except ImportError:
