@@ -116,6 +116,14 @@ To change this settings, edit your ``~/.vimrc``: ::
     let g:pymode_run_key = 'R'
 
 
+Loading the Plugin
+------------------
+
+Default values: ::
+
+    " Load the whole plugin
+    let g:pymode = 1
+
 Python 3 support
 ----------------
 .. note:: Requires vim to be compiled with ``python3`` support. You can verify it with
