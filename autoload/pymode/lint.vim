@@ -15,8 +15,10 @@ fun! pymode#lint#Check() "{{{
     let g:pymode_lint_buffer = bufnr('%')
 
     if g:pymode_py3k != 0
+        py3 from pymode import lint
         py3 lint.check_file()
     else
+        py from pymode import lint
         py lint.check_file()
     endif
 
@@ -103,7 +105,9 @@ fun! pymode#lint#Auto() "{{{
             return 0
         endtry
     endif
+    py from pymode import auto
     py auto.fix_current_file()
     cclose
     edit
+    call pymode#WideMessage("AutoPep8 done.")
 endfunction "}}}

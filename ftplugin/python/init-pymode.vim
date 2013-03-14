@@ -61,7 +61,7 @@ import sys, vim, os
 curpath = vim.eval("getcwd()")
 libpath = os.path.join(vim.eval("expand('<sfile>:p:h:h:h')"), 'pylibs')
 
-sys.path = [os.path.dirname(libpath), libpath, curpath] + vim.eval("g:pymode_paths") + sys.path
+sys.path = [libpath, curpath] + vim.eval("g:pymode_paths") + sys.path
 EOF
 
 endif " }}}
@@ -142,11 +142,11 @@ if !pymode#Default("g:pymode_lint", 1) || g:pymode_lint
     endif
 
     if g:pymode_py3k == 1
-        py3 from pymode import lint, queue, auto
+        py3 from pymode import queue
 
         au VimLeavePre * py3 queue.stop_queue()
     else
-        py from pymode import lint, queue, auto
+        py from pymode import queue
 
         au VimLeavePre * py queue.stop_queue()
     endif
