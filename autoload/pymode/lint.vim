@@ -16,9 +16,11 @@ fun! pymode#lint#Check() "{{{
 
     if g:pymode_py3k != 0
         py3 from pymode import lint
+        py3 queue.stop_queue(False)
         py3 lint.check_file()
     else
         py from pymode import lint
+        py queue.stop_queue(False)
         py lint.check_file()
     endif
 
